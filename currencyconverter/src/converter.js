@@ -32,6 +32,25 @@ export function ConvPage() {
   const [toCurr, setToCurr] = useState();
   const [convertedValue, setConvertedValue] = useState();
 
+  const makeAPICall = async () => {
+
+    if(fromCurr != null && toCurr != null){
+      try{
+        const url = "http://localhost:8080/conversionRate?fromCurr=" + fromCurr + "&toCurr=" + toCurr;
+        console.log(url);
+        const res = await fetch(url, {mode:"cors"});
+        const data = await res.json();
+        
+        console.log(data.rate);
+      }
+      catch(e) {
+        console.log(e);
+      }
+    } else {
+      alert("fromCurr and toCurr must not be null");
+    }
+  }
+
   const currencies = LoadCurrencies();
 
   const handleInputChange = (event) => {
@@ -46,8 +65,9 @@ export function ConvPage() {
     setToCurr(event.target.value);
   }
 
-  const handleSubnit = (event) => {
+  const handleSubmit = () => {
     if(fromCurr != null && toCurr != null && input != null) {
+      makeAPICall();
     }
   }
 
@@ -55,18 +75,18 @@ export function ConvPage() {
       <>
           <div className='cFrom'>
               <h3 className='inline-child lblCurr'>From:</h3>
-              <select className='inline-child ddlCurr' onSelect={handleFromSelection}>
+              <select className='inline-child ddlCurr' onChange={handleFromSelection}>
                   {currencies&&
-                      currencies.map((data) => {return <option key={data} onSelect={console.log("Selected")}>{data}</option>})
+                      currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
               </select>
           </div>
 
           <div className='cTo'>
           <h3 className='inline-child lblCurr'>To:</h3>
-              <select className='inline-child ddlCurr' onSelect={handleToSelection}>
+              <select className='inline-child ddlCurr' onChange={handleToSelection}>
                   {currencies&&
-                      currencies.map((data) => {return <option key={data} onSelect={console.log("Selected")}>{data}</option>})
+                      currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
               </select>
           </div>
@@ -76,7 +96,7 @@ export function ConvPage() {
           </div>
 
           <div>
-            <input className="btnSubmit" type="submit" value="convert"/>
+            <input className="btnSubmit" type="submit" value="convert" onClick={handleSubmit}/>
           </div>
 
           <p>{input}</p>
