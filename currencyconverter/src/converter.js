@@ -30,10 +30,10 @@ export function ConvPage() {
   const [input, setInput] = useState();
   const [fromCurr, setFromCurr] = useState();
   const [toCurr, setToCurr] = useState();
+  const [conversionRate, setConversionRate] = useState();
   const [convertedValue, setConvertedValue] = useState();
 
-  const makeAPICall = async () => {
-
+  const convertValue = async () => {
     if(fromCurr != null && toCurr != null){
       try{
         const url = "http://localhost:8080/conversionRate?fromCurr=" + fromCurr + "&toCurr=" + toCurr;
@@ -42,6 +42,11 @@ export function ConvPage() {
         const data = await res.json();
         
         console.log(data.rate);
+
+        var rate = data.rate;
+        setConversionRate((Math.round(data.rate * 100) / 100).toString());
+
+        setConvertedValue((Math.round((parseFloat(input) * rate) * 100) / 100));
       }
       catch(e) {
         console.log(e);
@@ -65,9 +70,9 @@ export function ConvPage() {
     setToCurr(event.target.value);
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if(fromCurr != null && toCurr != null && input != null) {
-      makeAPICall();
+      convertValue();
     }
   }
 
@@ -93,13 +98,14 @@ export function ConvPage() {
           
           <div>
             <input className="tbxValue" type="text" placeholder='value' onChange={handleInputChange}/>
+            <label className="lblConvRate">{conversionRate}</label>
           </div>
 
           <div>
             <input className="btnSubmit" type="submit" value="convert" onClick={handleSubmit}/>
           </div>
 
-          <p>{input}</p>
+          <p>{input} {fromCurr} are {convertedValue} {toCurr}</p>
       </>
   );
 }

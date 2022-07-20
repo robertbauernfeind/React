@@ -21,6 +21,10 @@
 }
 .tbxValue {
     margin-bottom: 20px;
+    margin-left: 37px;
     width: 122px;
     font-size: large;
+}
+.lblConvRate {
+    margin-left: 10px;;
 }
