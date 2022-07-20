@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { useState, useEffect } from 'react';
+import "./css/converter.css";
 
 function LoadCurrencies() {
     const [curr, setCurr] = useState([]);
@@ -26,21 +27,59 @@ function LoadCurrencies() {
 }
 
 export function ConvPage() {
-    const currencies = LoadCurrencies();
+  const [input, setInput] = useState();
+  const [fromCurr, setFromCurr] = useState();
+  const [toCurr, setToCurr] = useState();
+  const [convertedValue, setConvertedValue] = useState();
 
-    return(
-        <>
-            <div className='cFrom'>
-                <h3>From:</h3>
-                <select>
-                    {currencies&&
-                        currencies.map((data) => {return <option key={data} onSelect={console.log("Selected")}>{data}</option>})
-                    }
-                </select>
-            </div>
-            <div className='cTo'>
+  const currencies = LoadCurrencies();
 
-            </div>
-        </>
-    );
+  const handleInputChange = (event) => {
+    setInput(event.target.value);
+  }
+
+  const handleFromSelection = (event) => {
+    setFromCurr(event.target.value);
+  }
+
+  const handleToSelection = (event) => {
+    setToCurr(event.target.value);
+  }
+
+  const handleSubnit = (event) => {
+    if(fromCurr != null && toCurr != null && input != null) {
+    }
+  }
+
+  return(
+      <>
+          <div className='cFrom'>
+              <h3 className='inline-child lblCurr'>From:</h3>
+              <select className='inline-child ddlCurr' onSelect={handleFromSelection}>
+                  {currencies&&
+                      currencies.map((data) => {return <option key={data} onSelect={console.log("Selected")}>{data}</option>})
+                  }
+              </select>
+          </div>
+
+          <div className='cTo'>
+          <h3 className='inline-child lblCurr'>To:</h3>
+              <select className='inline-child ddlCurr' onSelect={handleToSelection}>
+                  {currencies&&
+                      currencies.map((data) => {return <option key={data} onSelect={console.log("Selected")}>{data}</option>})
+                  }
+              </select>
+          </div>
+          
+          <div>
+            <input className="tbxValue" type="text" placeholder='value' onChange={handleInputChange}/>
+          </div>
+
+          <div>
+            <input className="btnSubmit" type="submit" value="convert"/>
+          </div>
+
+          <p>{input}</p>
+      </>
+  );
 }

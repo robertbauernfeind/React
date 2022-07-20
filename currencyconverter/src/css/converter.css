@@ -1,0 +1,26 @@
+.inline-child {
+    display: inline-block;
+}
+.ddlCurr {
+    font-size: large;
+    margin-left: 10px;
+}
+.lblCurr {
+    text-align: right;
+    width: 50px;
+}
+.cFrom{
+    margin-bottom: -20px;
+}
+.cTo {
+    margin-bottom: 0px;
+}
+.btnSubmit {
+    font-size: large;
+    width: 128px;
+}
+.tbxValue {
+    margin-bottom: 20px;
+    width: 122px;
+    font-size: large;
+}
