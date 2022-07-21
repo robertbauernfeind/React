@@ -2,6 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { useState, useEffect } from 'react';
 import "./css/converter.css";
+import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+/>
 
 function LoadCurrencies() {
     const [curr, setCurr] = useState([]);
@@ -32,8 +39,17 @@ export function ConvPage() {
   const [toCurr, setToCurr] = useState();
   const [conversionRate, setConversionRate] = useState();
   const [convertedValue, setConvertedValue] = useState();
+  const [alert, setAlert] = useState({
+    type: "",
+    msg: "",
+    open: false
+  });
 
   const convertValue = async () => {
+    setAlert({
+      open: false
+    });
+
     if(fromCurr != null && toCurr != null){
       try{
         const url = "http://localhost:8080/conversionRate?fromCurr=" + fromCurr + "&toCurr=" + toCurr;
@@ -41,18 +57,43 @@ export function ConvPage() {
         const res = await fetch(url, {mode:"cors"});
         const data = await res.json();
         
-        console.log(data.rate);
+        console.log(data);
+
+        if(data.msg != null) {
+          throw {
+            name: "Exception",
+            message: data.msg,
+            toString: function() {
+              return (this.name + ": " + this.message);
+            }
+          }
+        }
 
         var rate = data.rate;
         setConversionRate((Math.round(data.rate * 100) / 100).toString());
 
         setConvertedValue((Math.round((parseFloat(input) * rate) * 100) / 100));
+
+        setAlert({
+          type: "success",
+          msg: "success!",
+          open: true
+        });
       }
       catch(e) {
         console.log(e);
+        setAlert({
+          type: "error",
+          msg: e.toString(),
+          open: true
+        });
       }
     } else {
-      alert("fromCurr and toCurr must not be null");
+      setAlert({
+        type: "warning",
+        msg: "Currencies must be selected",
+        open: true
+      });
     }
   }
 
@@ -60,27 +101,46 @@ export function ConvPage() {
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
+    setConvertedValue();
   }
 
   const handleFromSelection = (event) => {
     setFromCurr(event.target.value);
+    setConvertedValue();
   }
 
   const handleToSelection = (event) => {
     setToCurr(event.target.value);
+    setConvertedValue();
   }
 
   const handleSubmit = async () => {
-    if(fromCurr != null && toCurr != null && input != null) {
+    if(input != null && input != "") {
       convertValue();
+    } else {
+      setAlert({
+        type: "warning",
+        msg: "Value needed!",
+        open: true
+      });
+      setConvertedValue();
     }
   }
 
+
+
   return(
-      <>
+    <>
+      <Card 
+        sx={{ maxWidth: 325}}
+        className="inline-child"
+        >
+        <CardHeader title="Currency Converter"/>
+        <CardContent>
           <div className='cFrom'>
               <h3 className='inline-child lblCurr'>From:</h3>
               <select className='inline-child ddlCurr' onChange={handleFromSelection}>
+                <option key="defaultVal" selected></option>
                   {currencies&&
                       currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
@@ -90,6 +150,7 @@ export function ConvPage() {
           <div className='cTo'>
           <h3 className='inline-child lblCurr'>To:</h3>
               <select className='inline-child ddlCurr' onChange={handleToSelection}>
+                <option key="defaultVal" selected></option>
                   {currencies&&
                       currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
@@ -97,15 +158,44 @@ export function ConvPage() {
           </div>
           
           <div>
-            <input className="tbxValue" type="text" placeholder='value' onChange={handleInputChange}/>
-            <label className="lblConvRate">{conversionRate}</label>
+            <input className="tbxValue" type="text" placeholder='value' onSubmit={handleSubmit} onChange={handleInputChange}/>
           </div>
 
           <div>
-            <input className="btnSubmit" type="submit" value="convert" onClick={handleSubmit}/>
+            <Button className="btnSubmit" variant='contained' onClick={handleSubmit}>Submit</Button>
           </div>
 
-          <p>{input} {fromCurr} are {convertedValue} {toCurr}</p>
-      </>
+          {convertedValue&&
+            <p>{input} {fromCurr} are {convertedValue} {toCurr}</p>
+          }
+          {(conversionRate && convertedValue)&&
+            <p>Conversion-rate: {conversionRate}</p>
+          }
+
+          {alert&&
+            <Collapse in={alert.open}>
+              <Alert 
+                className="alert"
+                severity={alert.type}
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setAlert({
+                        open: false
+                      })
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit"/>
+                  </IconButton>
+                }
+              >{alert.msg}</Alert>
+            </Collapse>
+          }
+        </CardContent>
+      </Card>
+    </>
   );
 }

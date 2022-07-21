@@ -1,6 +1,10 @@
 * {
     font-family: 'Kanit', sans-serif;
 }
+
+body {
+    background-color: rgb(240, 240, 240);
+}
 .App {
     text-align: center;
 }

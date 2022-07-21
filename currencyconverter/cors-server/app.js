@@ -43,7 +43,10 @@ app.get("/conversionRate", (req, res) => {
             res.send({rate});
             console.log("Requested conversion-rate");
          })
-         .catch((error) => console.log(error));
+         .catch((error) => {
+            console.log(error)
+            res.send({"msg": error.toString()});
+         });
 
     }
 });
