@@ -1,3 +1,8 @@
 .inline-child {
     display: inline-block;
 }
+
+.txtFields {
+    width: 100px;
+    size: small;
+}
