@@ -11,7 +11,7 @@ export function ConvPageRemake() {
         convRate: null,
         array: [],
         selectedFrom: "",
-        selectedTo
+        selectedTo: ""
     });
 
     const makeAPICall = async () => {
@@ -42,7 +42,7 @@ export function ConvPageRemake() {
             <Card sx={{
                 maxWidth: 325
                 }}
-                className="inline-child"
+                className="inline-child remakeCard"
             >
                 <CardHeader title="Currency Converter" subheader="Remake"/>
                 <CardContent>
@@ -51,7 +51,7 @@ export function ConvPageRemake() {
                             id="txtFrom"
                             label={curr.from}
                             onChange={handleTextChange}
-                            className="txtFields"
+                            className="txtFields inline-childs"
                             size="small"
                             sx={{
                                 width: 75
@@ -59,8 +59,36 @@ export function ConvPageRemake() {
                         />
                         
                         <Autocomplete
+                            sx={{
+                                width: 120
+                            }}
                             id='cbxFrom'
                             options={curr.array}
+                            className="cbxFields inline-child"
+                            size="small"
+                            renderInput={(params) => <TextField {...params} label="From"/>}
+                        />
+                    </div>
+
+                    <div className='to'>
+                        <TextField
+                            id="txtTo"
+                            label={curr.to}
+                            onChange={handleTextChange}
+                            className="txtFields inline-childs"
+                            size="small"
+                            sx={{
+                                width: 75
+                            }}
+                        />
+                        
+                        <Autocomplete
+                            sx={{
+                                width: 120
+                            }}
+                            id='cbxTo'
+                            options={curr.array}
+                            className="cbxFields inline-child"
                             size="small"
                             renderInput={(params) => <TextField {...params} label="From"/>}
                         />

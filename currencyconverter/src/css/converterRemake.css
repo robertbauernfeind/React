@@ -1,8 +1,15 @@
+.remakeCard {
+    margin-left: 10px;
+}
+
 .inline-child {
     display: inline-block;
 }
 
-.txtFields {
-    width: 100px;
-    size: small;
+.cbxFields {
+    margin-left: 10px;
+}
+
+.to {
+    margin-top: 10px;
 }
