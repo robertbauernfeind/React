@@ -31,9 +31,21 @@ export function ConvPageRemake() {
         makeAPICall();
     }, []);
 
-    const handleTextChange = (event) => {
+    const handleChange = (event) => {
         switch(event.target.id) {
             case "txtFrom":
+                break;
+
+            case "txtTo":
+                break;
+
+            case "cbxFrom":
+                console.log(event.target.value);
+                break;
+
+            case "cbxTo":
+                console.log(event.target.value);
+                break;
         }
     }
 
@@ -50,7 +62,7 @@ export function ConvPageRemake() {
                         <TextField
                             id="txtFrom"
                             label={curr.from}
-                            onChange={handleTextChange}
+                            onChange={handleChange}
                             className="txtFields inline-childs"
                             size="small"
                             sx={{
@@ -74,7 +86,7 @@ export function ConvPageRemake() {
                         <TextField
                             id="txtTo"
                             label={curr.to}
-                            onChange={handleTextChange}
+                            onChange={handleChange}
                             className="txtFields inline-childs"
                             size="small"
                             sx={{
@@ -90,19 +102,11 @@ export function ConvPageRemake() {
                             options={curr.array}
                             className="cbxFields inline-child"
                             size="small"
-                            renderInput={(params) => <TextField {...params} label="From"/>}
+                            renderInput={(params) => <TextField {...params} label="To"/>}
                         />
                     </div>
                 </CardContent>
             </Card>
         </>
     );
-}
-
-async function RequestCurrencies() {
-    const url = "http://localhost:8080/data";
-    const res = await fetch(url, {mode:"cors"});
-    const data = await res.json();
-
-    return data;
 }
