@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import "./css/converter.css";
-import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton, ThemeProvider, createTheme } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 <link
@@ -110,7 +110,7 @@ export function ConvPage() {
   }
 
   const handleSubmit = async () => {
-    if(input != null && input != "") {
+    if(input !== null && input !== "") {
       convertValue();
     } else {
       setAlert({
