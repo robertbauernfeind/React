@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <div className='App'>
-      <h1>Currency converter with CORS server</h1>
+      <h1>Currency converter with Node.JS server</h1>
       <ConvPage/>
       <ConvPageRemake/>
     </div>

@@ -5,22 +5,36 @@ import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton, The
 import CloseIcon from '@mui/icons-material/Close';
 
 export function ConvPageRemake() {
-    const [curr, setCurr] = useState({
-        from: "",
-        to: "",
-        convRate: null,
-        array: [],
-        selectedFrom: "",
-        selectedTo: ""
-    });
+    const [curr, setCurr] = useState([]);
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
+    const [valueFrom, setValueFrom] = useState();
+    const [valueTo, setValueTo] = useState();
+    const [convRate, setConvRate] = useState();
 
-    const makeAPICall = async () => {
-        try{
+    const requestCurrencies = async () => {
+        try{ 
             const url = "http://localhost:8080/data";
             const res = await fetch(url, {mode:"cors"});
             const data = await res.json();
             
-            setCurr({array: data});
+            setCurr(data);
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
+
+    const requestConversionRate = async () => {
+        try {
+            const url = "http://localhost:8080/conversionRate?fromCurr=" + from + "&toCurr=" + to;
+            console.log(url);
+            const res = await fetch(url, {mode:"cors"});
+            const data = await res.json();
+        
+            
+            console.log(data);
+            setConvRate(data.rate);
         }
         catch(e) {
             console.log(e);
@@ -28,23 +42,35 @@ export function ConvPageRemake() {
     }
 
     useEffect(() => {
-        makeAPICall();
+        requestCurrencies();
     }, []);
+
+    useEffect(() => {
+        if((from !== undefined) && (to !== undefined)) {
+            requestConversionRate();
+        }
+    }, [from, to])
 
     const handleChange = (event) => {
         switch(event.target.id) {
             case "txtFrom":
+                setValueFrom(event.target.value);
+                if(convRate !== undefined){
+                    if(!isNaN(event.target.value)) {
+                        const convertedVal = parseFloat(event.target.value) * convRate
+                        setValueTo(Math.round(convertedVal * 100) / 100);
+                    }
+                }
                 break;
 
             case "txtTo":
-                break;
-
-            case "cbxFrom":
-                console.log(event.target.value);
-                break;
-
-            case "cbxTo":
-                console.log(event.target.value);
+                setValueTo(event.target.value);
+                if(convRate !== undefined){
+                    if(!isNaN(event.target.value)) {
+                        const convertedVal = parseFloat(event.target.value) / convRate
+                        setValueFrom(Math.round(convertedVal * 100) / 100);
+                    }
+                }
                 break;
         }
     }
@@ -61,12 +87,12 @@ export function ConvPageRemake() {
                     <div className='from'>
                         <TextField
                             id="txtFrom"
-                            label={curr.from}
                             onChange={handleChange}
                             className="txtFields inline-childs"
                             size="small"
+                            value={valueFrom}
                             sx={{
-                                width: 75
+                                width: 80
                             }}
                         />
                         
@@ -75,9 +101,10 @@ export function ConvPageRemake() {
                                 width: 120
                             }}
                             id='cbxFrom'
-                            options={curr.array}
+                            options={curr}
                             className="cbxFields inline-child"
                             size="small"
+                            onInputChange={(val) => setFrom(val.target.outerText)}
                             renderInput={(params) => <TextField {...params} label="From"/>}
                         />
                     </div>
@@ -85,12 +112,12 @@ export function ConvPageRemake() {
                     <div className='to'>
                         <TextField
                             id="txtTo"
-                            label={curr.to}
                             onChange={handleChange}
                             className="txtFields inline-childs"
                             size="small"
+                            value={valueTo}
                             sx={{
-                                width: 75
+                                width: 80
                             }}
                         />
                         
@@ -99,14 +126,16 @@ export function ConvPageRemake() {
                                 width: 120
                             }}
                             id='cbxTo'
-                            options={curr.array}
+                            options={curr}
                             className="cbxFields inline-child"
                             size="small"
-                            renderInput={(params) => <TextField {...params} label="To"/>}
+                            onInputChange={(val) => setTo(val.target.outerText)}
+                            renderInput={(params) => <TextField id="test" {...params} label="To"/>}
                         />
                     </div>
                 </CardContent>
             </Card>
+
         </>
     );
 }
