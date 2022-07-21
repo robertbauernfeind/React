@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { useState, useEffect } from 'react';
 import "./css/converter.css";
-import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Alert, Collapse, IconButton, ThemeProvider, createTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 <link
@@ -39,11 +38,7 @@ export function ConvPage() {
   const [toCurr, setToCurr] = useState();
   const [conversionRate, setConversionRate] = useState();
   const [convertedValue, setConvertedValue] = useState();
-  const [alert, setAlert] = useState({
-    type: "",
-    msg: "",
-    open: false
-  });
+  const [alert, setAlert] = useState();
 
   const convertValue = async () => {
     setAlert({
@@ -127,8 +122,6 @@ export function ConvPage() {
     }
   }
 
-
-
   return(
     <>
       <Card 
@@ -140,7 +133,7 @@ export function ConvPage() {
           <div className='cFrom'>
               <h3 className='inline-child lblCurr'>From:</h3>
               <select className='inline-child ddlCurr' onChange={handleFromSelection}>
-                <option key="defaultVal" selected></option>
+                <option key="defaultVal" defaultValue="" ></option>
                   {currencies&&
                       currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
@@ -150,7 +143,7 @@ export function ConvPage() {
           <div className='cTo'>
           <h3 className='inline-child lblCurr'>To:</h3>
               <select className='inline-child ddlCurr' onChange={handleToSelection}>
-                <option key="defaultVal" selected></option>
+                <option key="defaultVal" defaultValue="" ></option>
                   {currencies&&
                       currencies.map((data) => {return <option key={data}>{data}</option>})
                   }
